@@ -232,17 +232,17 @@ assign shift_data_state = curr_state[3];
 // next state logic
 
   always@(*)
-  case (curr_state)
-    6'd1      : if (head_flag) next_state = 6'd2;
-           		     else     next_state = curr_state;
+    case (curr_state) //synopsys full case parallel case
+    6'd1      : if (head_flag) 		next_state = 6'd2;
+           		     else        next_state = 6'd1;
     6'd2      : if (counter == 12'd2078) next_state = 6'd4;
-            		     else     next_state = curr_state;
+            		     else        next_state = 6'd2;
     6'd4      : if (counter == 12'd2113) next_state = 6'd8;
-              		     else     next_state = curr_state;
+              		     else        next_state = 6'd4;
     6'd8      : if (counter == 12'd2114) next_state = 6'd16;
-              		     else     next_state = curr_state;
-    6'd16      : if (~head_flag) next_state = 6'd1;
-              		     else     next_state = curr_state;
+              		     else 	 next_state = 6'd8;
+    6'd16     : if (~head_flag)		next_state = 6'd1;
+              		     else     	next_state = 6'd16;
     default   :        		      next_state = 6'd1;
   endcase 
 
