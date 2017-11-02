@@ -149,78 +149,7 @@ end
 //********************** MUX ***********************//	
 wire [13:0] reff;
 wire [31:0] weight_in;
-/*
-always@(posedge clk or negedge rstn)
-if (rstn == 0)
-	reff = 14'b0;
-else if (counter == 5'd0)
-	reff = buffer_in_32;
-else if (counter == 5'd1)
-	reff = buffer_in_31;
-else if (counter == 5'd2)
-	reff = buffer_in_30;
-else if (counter == 5'd3)
-	reff = buffer_in_29;
-else if (counter == 5'd4)
-	reff = buffer_in_28;
-else if (counter == 5'd5)
-	reff = buffer_in_27;
-else if (counter == 5'd6)
-	reff = buffer_in_26;
-else if (counter == 5'd7)
-	reff = buffer_in_25;
-else if (counter == 5'd8)
-	reff = buffer_in_24;
-else if (counter == 5'd9)
-	reff = buffer_in_23;
-else if (counter == 5'd10)
-	reff = buffer_in_22;
-else if (counter == 5'd11)
-	reff = buffer_in_21;
-else if (counter == 5'd12)
-	reff = buffer_in_20;
-else if (counter == 5'd13)
-	reff = buffer_in_19;
-else if (counter == 5'd14)
-	reff = buffer_in_18;
-else if (counter == 5'd15)
-	reff = buffer_in_17;
-else if (counter == 5'd16)
-	reff = buffer_in_16;
-else if (counter == 5'd17)
-	reff = buffer_in_15;
-else if (counter == 5'd18)
-	reff = buffer_in_14;
-else if (counter == 5'd19)
-	reff = buffer_in_13;
-else if (counter == 5'd20)
-	reff = buffer_in_12;
-else if (counter == 5'd21)
-	reff = buffer_in_11;
-else if (counter == 5'd22)
-	reff = buffer_in_10;
-else if (counter == 5'd23)
-	reff = buffer_in_9;
-else if (counter == 5'd24)
-	reff = buffer_in_8;
-else if (counter == 5'd25)
-	reff = buffer_in_7;
-else if (counter == 5'd26)
-	reff = buffer_in_6;
-else if (counter == 5'd27)
-	reff = buffer_in_5;
-else if (counter == 5'd28)
-	reff = buffer_in_4;
-else if (counter == 5'd29)
-	reff = buffer_in_3;
-else if (counter == 5'd30)
-	reff = buffer_in_2;
-else if (counter == 5'd31)
-	reff = buffer_in_1;
-else
-	reff = reff;
-end
-*/
+
 	
 assign reff =   {14{(counter == 5'd0)}} & buffer_in_32 |
 		{14{(counter == 5'd1)}} & buffer_in_31 |
@@ -309,10 +238,9 @@ if (rstn == 0)
 	multiple <=   45'd0;
 else if (adap_filter_state == 1'b0)
 	multiple <=   45'd0;
-else if (counter<6'd32)
-	multiple <=   weight_in * {17'd0, reff};
+
 else
-	multiple <=   multiple;
+	multiple <=    weight_in * {17'd0, reff};
 end
 
 
