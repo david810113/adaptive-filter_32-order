@@ -151,71 +151,120 @@ wire [13:0] reff;
 wire [31:0] weight_in;
 
 	
-assign reff =   {14{(counter == 5'd0)}} & buffer_in_32 |
-		{14{(counter == 5'd1)}} & buffer_in_31 |
-		{14{(counter == 5'd2)}} & buffer_in_30 |		
-		{14{(counter == 5'd3)}} & buffer_in_29 |
-		{14{(counter == 5'd4)}} & buffer_in_28 |
-		{14{(counter == 5'd5)}} & buffer_in_27 |		
-		{14{(counter == 5'd6)}} & buffer_in_26 |	
-		{14{(counter == 5'd7)}} & buffer_in_25 |
-		{14{(counter == 5'd8)}} & buffer_in_24 |		
-		{14{(counter == 5'd9)}} & buffer_in_23 |
-		{14{(counter == 5'd10)}} & buffer_in_22 |
-		{14{(counter == 5'd11)}} & buffer_in_21 |		
-		{14{(counter == 5'd12)}} & buffer_in_20 |			
-		{14{(counter == 5'd13)}} & buffer_in_19 |
-		{14{(counter == 5'd14)}} & buffer_in_18 |
-		{14{(counter == 5'd15)}} & buffer_in_17 |
-		{14{(counter == 5'd16)}} & buffer_in_16 |
-		{14{(counter == 5'd17)}} & buffer_in_15 |		
-		{14{(counter == 5'd18)}} & buffer_in_14 |
-		{14{(counter == 5'd19)}} & buffer_in_13 |
-		{14{(counter == 5'd20)}} & buffer_in_12 |		
-		{14{(counter == 5'd21)}} & buffer_in_11 |	
-		{14{(counter == 5'd22)}} & buffer_in_10 |
-		{14{(counter == 5'd23)}} & buffer_in_9 |		
-		{14{(counter == 5'd24)}} & buffer_in_8 |
-		{14{(counter == 5'd25)}} & buffer_in_7 |
-		{14{(counter == 5'd26)}} & buffer_in_6 |		
-		{14{(counter == 5'd27)}} & buffer_in_5 |			
-		{14{(counter == 5'd28)}} & buffer_in_4 |
-		{14{(counter == 5'd29)}} & buffer_in_3 |
-		{14{(counter == 5'd30)}} & buffer_in_2 |
-		{14{(counter == 5'd31)}} & buffer_in_1;
+reg [31:0]counter_dly;	
+	always@(posedge clk or negedge rstn)
+	begin
+	if (rstn == 0)
+		counter+dly <=    6'd0;
+	else if (adap_filter_state == 1'b0)
+		counter_dly <= 32'd0;	
+	else
+		counter_dly <= {counter_dly[30:0],adap_filter_state};
+	end
+
+	
+wire [31:0]pipeline_sel;
+	assgin pipeline_sel[0] = counter_dly[0] & ~counter_dly[1];
+	assgin pipeline_sel[1] = counter_dly[1] & ~counter_dly[2];
+	assgin pipeline_sel[2] = counter_dly[2] & ~counter_dly[3];
+	assgin pipeline_sel[3] = counter_dly[3] & ~counter_dly[4];
+	assgin pipeline_sel[4] = counter_dly[4] & ~counter_dly[5];
+	assgin pipeline_sel[5] = counter_dly[5] & ~counter_dly[6];
+	assgin pipeline_sel[6] = counter_dly[6] & ~counter_dly[7];
+	assgin pipeline_sel[7] = counter_dly[7] & ~counter_dly[8];	
+	assgin pipeline_sel[8] = counter_dly[8] & ~counter_dly[9];
+	assgin pipeline_sel[9] = counter_dly[9] & ~counter_dly[10];
+	assgin pipeline_sel[10] = counter_dly[10] & ~counter_dly[11];
+	assgin pipeline_sel[11] = counter_dly[11] & ~counter_dly[12];
+	assgin pipeline_sel[12] = counter_dly[12] & ~counter_dly[13];
+	assgin pipeline_sel[13] = counter_dly[13] & ~counter_dly[14];
+	assgin pipeline_sel[14] = counter_dly[14] & ~counter_dly[15];
+	assgin pipeline_sel[15] = counter_dly[15] & ~counter_dly[16];		
+	assgin pipeline_sel[16] = counter_dly[16] & ~counter_dly[17];
+	assgin pipeline_sel[17] = counter_dly[17] & ~counter_dly[18];
+	assgin pipeline_sel[18] = counter_dly[18] & ~counter_dly[19];
+	assgin pipeline_sel[19] = counter_dly[19] & ~counter_dly[20];
+	assgin pipeline_sel[20] = counter_dly[20] & ~counter_dly[21];
+	assgin pipeline_sel[21] = counter_dly[21] & ~counter_dly[22];
+	assgin pipeline_sel[22] = counter_dly[22] & ~counter_dly[23];
+	assgin pipeline_sel[23] = counter_dly[23] & ~counter_dly[24];	
+	assgin pipeline_sel[24] = counter_dly[24] & ~counter_dly[25];
+	assgin pipeline_sel[25] = counter_dly[25] & ~counter_dly[26];
+	assgin pipeline_sel[26] = counter_dly[26] & ~counter_dly[27];
+	assgin pipeline_sel[27] = counter_dly[27] & ~counter_dly[28];
+	assgin pipeline_sel[28] = counter_dly[28] & ~counter_dly[29];
+	assgin pipeline_sel[29] = counter_dly[29] & ~counter_dly[30];
+	assgin pipeline_sel[30] = counter_dly[30] & ~counter_dly[31];
+	assgin pipeline_sel[31] = counter_dly[31] & ~counter_dly[32];	
+	
+	
+assign reff =   (14{pipeline_sel[0]}) & buffer_in_32 |
+		(14{pipeline_sel[1]}) & buffer_in_31 |
+		(14{pipeline_sel[2]}) & buffer_in_30 |		
+		(14{pipeline_sel[3]}) & buffer_in_29 |
+		(14{pipeline_sel[4]}) & buffer_in_28 |
+		(14{pipeline_sel[5]}) & buffer_in_27 |		
+		(14{pipeline_sel[6]}) & buffer_in_26 |	
+		(14{pipeline_sel[7]}) & buffer_in_25 |
+		(14{pipeline_sel[8]}) & buffer_in_24 |		
+		(14{pipeline_sel[9]}) & buffer_in_23 |
+		(14{pipeline_sel[10]}) & buffer_in_22 |
+		(14{pipeline_sel[11]}) & buffer_in_21 |		
+		(14{pipeline_sel[12]}) & buffer_in_20 |			
+		(14{pipeline_sel[13]}) & buffer_in_19 |
+		(14{pipeline_sel[14]}) & buffer_in_18 |
+		(14{pipeline_sel[15]}) & buffer_in_17 |
+		(14{pipeline_sel[16]}) & buffer_in_16 |
+		(14{pipeline_sel[17]}) & buffer_in_15 |		
+		(14{pipeline_sel[18]}) & buffer_in_14 |
+		(14{pipeline_sel[19]}) & buffer_in_13 |
+		(14{pipeline_sel[20]}) & buffer_in_12 |		
+		(14{pipeline_sel[21]}) & buffer_in_11 |	
+		(14{pipeline_sel[22]}) & buffer_in_10 |
+		(14{pipeline_sel[23]}) & buffer_in_9 |		
+		(14{pipeline_sel[24]}) & buffer_in_8 |
+		(14{pipeline_sel[25]}) & buffer_in_7 |
+		(14{pipeline_sel[26]}) & buffer_in_6 |		
+		(14{pipeline_sel[27]}) & buffer_in_5 |			
+		(14{pipeline_sel[28]}) & buffer_in_4 |
+		(14{pipeline_sel[29]}) & buffer_in_3 |
+		(14{pipeline_sel[30]}) & buffer_in_2 |
+		(14{pipeline_sel[31]}) & buffer_in_1;
 		
-assign weight_in ={32{(counter == 5'd0)}} & weight_in_31 |
-			{32{(counter == 5'd1)}} & weight_in_30 |
-			{32{(counter == 5'd2)}} & weight_in_29 |		
-			{32{(counter == 5'd3)}} & weight_in_28 |
-			{32{(counter == 5'd4)}} & weight_in_27 |
-			{32{(counter == 5'd5)}} & weight_in_26 |		
-			{32{(counter == 5'd6)}} & weight_in_25 |	
-			{32{(counter == 5'd7)}} & weight_in_24 |
-			{32{(counter == 5'd8)}} & weight_in_23 |		
-			{32{(counter == 5'd9)}} & weight_in_22 |
-			{32{(counter == 5'd10)}} & weight_in_21 |
-			{32{(counter == 5'd11)}} & weight_in_20 |		
-			{32{(counter == 5'd12)}} & weight_in_19 |			
-			{32{(counter == 5'd13)}} & weight_in_18 |
-			{32{(counter == 5'd14)}} & weight_in_17 |		
-			{32{(counter == 5'd15)}} & weight_in_16 |
-			{32{(counter == 5'd16)}} & weight_in_15 |
-			{32{(counter == 5'd17)}} & weight_in_14 |		
-			{32{(counter == 5'd18)}} & weight_in_13 |
-			{32{(counter == 5'd19)}} & weight_in_12 |
-			{32{(counter == 5'd20)}} & weight_in_11 |		
-			{32{(counter == 5'd21)}} & weight_in_10 |	
-			{32{(counter == 5'd22)}} & weight_in_9 |
-			{32{(counter == 5'd23)}} & weight_in_8 |		
-			{32{(counter == 5'd24)}} & weight_in_7 |
-			{32{(counter == 5'd25)}} & weight_in_6 |
-			{32{(counter == 5'd26)}} & weight_in_5 |		
-			{32{(counter == 5'd27)}} & weight_in_4 |			
-			{32{(counter == 5'd28)}} & weight_in_3 |
-			{32{(counter == 5'd29)}} & weight_in_2 |		
-			{32{(counter == 5'd30)}} & weight_in_1 |
-			{32{(counter == 5'd31)}} & weight_in_0;		
+assign weight_in =(32{pipeline_sel[0]}) & weight_in_31 |
+			(32{pipeline_sel[1]}) & weight_in_30 |
+			(32{pipeline_sel[2]}) & weight_in_29 |		
+			(32{pipeline_sel[3]}) & weight_in_28 |
+			(32{pipeline_sel[4]}) & weight_in_27 |
+			(32{pipeline_sel[5]}) & weight_in_26 |		
+			(32{pipeline_sel[6]}) & weight_in_25 |	
+			(32{pipeline_sel[7]}) & weight_in_24 |
+			(32{pipeline_sel[8]}) & weight_in_23 |		
+			(32{pipeline_sel[9]}) & weight_in_22 |
+			(32{pipeline_sel[10]}) & weight_in_21 |
+			(32{pipeline_sel[11]}) & weight_in_20 |		
+			(32{pipeline_sel[12]}) & weight_in_19 |			
+			(32{pipeline_sel[13]}) & weight_in_18 |
+			(32{pipeline_sel[14]}) & weight_in_17 |		
+			(32{pipeline_sel[15]}) & weight_in_16 |
+			(32{pipeline_sel[16]}) & weight_in_15 |
+			(32{pipeline_sel[17]}) & weight_in_14 |		
+			(32{pipeline_sel[18]}) & weight_in_13 |
+			(32{pipeline_sel[19]}) & weight_in_12 |
+			(32{pipeline_sel[20]}) & weight_in_11 |		
+			(32{pipeline_sel[21]}) & weight_in_10 |	
+			(32{pipeline_sel[22]}) & weight_in_9 |
+			(32{pipeline_sel[23]}) & weight_in_8 |		
+			(32{pipeline_sel[24]}) & weight_in_7 |
+			(32{pipeline_sel[25]}) & weight_in_6 |
+			(32{pipeline_sel[26]}) & weight_in_5 |		
+			(32{pipeline_sel[27]}) & weight_in_4 |			
+			(32{pipeline_sel[28]}) & weight_in_3 |
+			(32{pipeline_sel[29]}) & weight_in_2 |		
+			(32{pipeline_sel[30]}) & weight_in_1 |
+			(32{pipeline_sel[31]}) & weight_in_0;		
+			
+	
 			
 
 //********************** DSP ***********************//
@@ -238,9 +287,10 @@ if (rstn == 0)
 	multiple <=   45'd0;
 else if (adap_filter_state == 1'b0)
 	multiple <=   45'd0;
-
-else
+else if (counter<6'd33)
 	multiple <=    weight_in * {17'd0, reff};
+else
+	multiple <=    multiple;
 end
 
 
@@ -263,7 +313,7 @@ if (rstn == 0)
 	nref <=   32'd0;
 else if (adap_filter_state == 1'b0)
 	nref <=   32'd0;
-else if (counter<6'd32)
+else if (counter<6'd33)
 	nref <=  {17'd0, reff} * {17'd0, reff};
 else
 	nref <=   nref;
