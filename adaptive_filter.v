@@ -300,7 +300,7 @@ assign multiple = weight_in * {18'd0, reff};
 assign dsp_result = dreg + multiple[39:27];
 
 */
-assign counter_flag = ~(&counter);//0~14
+//assign counter_flag = ~(&counter);//0~14
 
 
 always@(posedge clk or negedge rstn)
@@ -309,7 +309,7 @@ if (rstn == 0)
 	multiple <=   45'd0;
 else if (adap_filter_state == 1'b0)
 	multiple <=   45'd0;
-else if (counter_flag == 1'd1)
+else if (counter<6'd32)
 	multiple <=   weight_in * {17'd0, reff};
 else
 	multiple <=   multiple;
@@ -335,7 +335,7 @@ if (rstn == 0)
 	nref <=   32'd0;
 else if (adap_filter_state == 1'b0)
 	nref <=   32'd0;
-else if (counter_flag == 1'd1)
+else if (counter<6'd32)
 	nref <=  {17'd0, reff} * {17'd0, reff};
 else
 	nref <=   nref;
