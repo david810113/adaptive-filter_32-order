@@ -364,7 +364,7 @@ reg adap_filter_state_dly;
 	always@(posedge clk or negedge rstn)
 	begin
 	if (rstn == 0)
-		adap_filter_state_dly <=   45'd0;
+		adap_filter_state_dly <=   1'd0;
 	else
 		adap_filter_state_dly <=    adap_filter_state;
 	end			
