@@ -120,7 +120,7 @@ if (rstn == 0)
 	counter <=    6'd0;
 else if (adap_filter_state == 1'b0)
 	counter <=    6'd0;	
-else if (counter == 6'd33)
+else if (counter == 6'd34)
 	counter <=   counter;
 else
 	counter <=   counter + 1'd1;
@@ -130,7 +130,7 @@ wire div_state;
 wire flag_15;
 wire flag_n;
 reg flag_16;
-assign flag_15 = (counter == 6'd32) ? 1'd1 : 1'd0;
+assign flag_15 = (counter == 6'd33) ? 1'd1 : 1'd0;
 assign flag_n =|buffer_in_32;
 
 always@(posedge clk or negedge rstn)
@@ -147,10 +147,8 @@ end
 //assign flag_15 = (counter == 5'd15) ? 1'd1 : 1'd0;
 
 //********************** MUX ***********************//	
-wire [13:0] reff;
-wire [31:0] weight_in;
 
-	
+/*	
 reg [31:0]counter_dly;	
 	always@(posedge clk or negedge rstn)
 	begin
@@ -196,8 +194,8 @@ wire [31:0]pipeline_sel;
 	assgin pipeline_sel[29] = counter_dly[29] & ~counter_dly[30];
 	assgin pipeline_sel[30] = counter_dly[30] & ~counter_dly[31];
 	assgin pipeline_sel[31] = counter_dly[31] & ~counter_dly[32];	
-	
-	
+
+
 assign reff =   (14{pipeline_sel[0]}) & buffer_in_32 |
 		(14{pipeline_sel[1]}) & buffer_in_31 |
 		(14{pipeline_sel[2]}) & buffer_in_30 |		
@@ -263,9 +261,91 @@ assign weight_in =(32{pipeline_sel[0]}) & weight_in_31 |
 			(32{pipeline_sel[29]}) & weight_in_2 |		
 			(32{pipeline_sel[30]}) & weight_in_1 |
 			(32{pipeline_sel[31]}) & weight_in_0;		
-			
+*/			
 	
+reg [13:0] reff;
+	always@(posedge clk or negedge rstn)
+	begin
+	if (rstn == 0)
+		reff <=    14'd1;
+	else	
+		case (counter)//synopsys full case parallel case
+		6'd0      :	reff <=  buffer_in_32;
+		6'd1      :	reff <=  buffer_in_31;
+		6'd2      :	reff <=  buffer_in_30;
+		6'd3      :	reff <=  buffer_in_29;
+		6'd4      :	reff <=  buffer_in_28;
+		6'd5      :	reff <=  buffer_in_27;
+		6'd6      :	reff <=  buffer_in_26;
+		6'd7      :	reff <=  buffer_in_25;
+		6'd8      :	reff <=  buffer_in_24;
+		6'd9      :	reff <=  buffer_in_23;
+		6'd10      :	reff <=  buffer_in_22;
+		6'd11      :	reff <=  buffer_in_21;
+		6'd12      :	reff <=  buffer_in_20;
+		6'd13      :	reff <=  buffer_in_19;
+		6'd14      :	reff <=  buffer_in_18;
+		6'd15      :	reff <=  buffer_in_17;
+		6'd16      :	reff <=  buffer_in_16;
+		6'd17      :	reff <=  buffer_in_15;
+		6'd18      :	reff <=  buffer_in_14;
+		6'd19      :	reff <=  buffer_in_13;
+		6'd20      :	reff <=  buffer_in_12;
+		6'd21      :	reff <=  buffer_in_11;
+		6'd22      :	reff <=  buffer_in_10;
+		6'd23      :	reff <=  buffer_in_9;
+		6'd24      :	reff <=  buffer_in_8;
+		6'd25      :	reff <=  buffer_in_7;
+		6'd26      :	reff <=  buffer_in_6;
+		6'd27      :	reff <=  buffer_in_5;
+		6'd28      :	reff <=  buffer_in_4;
+		6'd29      :	reff <=  buffer_in_3;
+		6'd30      :	reff <=  buffer_in_2;
+		6'd31      :	reff <=  buffer_in_1;
+		default	   :	reff <=  14'd1;
+	end	
 			
+reg [31:0] weight_in;	
+	always@(posedge clk or negedge rstn)
+	begin
+	if (rstn == 0)
+		weight_in <=    32'd1;
+	else	
+		case (counter)//synopsys full case parallel case
+		6'd0      :	weight_in <= weight_in_31;
+		6'd1      :	weight_in <= weight_in_30;
+		6'd2      :	weight_in <= weight_in_29;
+		6'd3      :	weight_in <= weight_in_28;
+		6'd4      :	weight_in <= weight_in_27;
+		6'd5      :	weight_in <= weight_in_26;
+		6'd6      :	weight_in <= weight_in_25;
+		6'd7      :	weight_in <= weight_in_24;
+		6'd8      :	weight_in <= weight_in_23;
+		6'd9      :	weight_in <= weight_in_22;
+		6'd10      :	weight_in <= weight_in_21;
+		6'd11      :	weight_in <= weight_in_20;
+		6'd12      :	weight_in <= weight_in_19;
+		6'd13      :	weight_in <= weight_in_18;
+		6'd14      :	weight_in <= weight_in_17;
+		6'd15      :	weight_in <= weight_in_16;
+		6'd16      :	weight_in <= weight_in_15;
+		6'd17      :	weight_in <= weight_in_14;
+		6'd18      :	weight_in <= weight_in_13;
+		6'd19      :	weight_in <= weight_in_12;
+		6'd20      :	weight_in <= weight_in_11;
+		6'd21      :	weight_in <= weight_in_10;
+		6'd22      :	weight_in <= weight_in_9;
+		6'd23      :	weight_in <= weight_in_8;
+		6'd24      :	weight_in <= weight_in_7;
+		6'd25      :	weight_in <= weight_in_6;
+		6'd26      :	weight_in <= weight_in_5;
+		6'd27      :	weight_in <= weight_in_4;
+		6'd28      :	weight_in <= weight_in_3;
+		6'd29      :	weight_in <= weight_in_2;
+		6'd30      :	weight_in <= weight_in_1;
+		6'd31      :	weight_in <= weight_in_0;
+		default	   :	weight_in <=  32'd1;
+	end		
 
 //********************** DSP ***********************//
 reg [45:0] multiple;
@@ -280,14 +360,22 @@ assign dsp_result = dreg + multiple[39:27];
 */
 //assign counter_flag = ~(&counter);//0~14
 
+reg adap_filter_state_dly;			
+	always@(posedge clk or negedge rstn)
+	begin
+	if (rstn == 0)
+		adap_filter_state_dly <=   45'd0;
+	else
+		adap_filter_state_dly <=    adap_filter_state;
+	end			
 
 always@(posedge clk or negedge rstn)
 begin
 if (rstn == 0)
 	multiple <=   45'd0;
-else if (adap_filter_state == 1'b0)
+else if (adap_filter_state_dly == 1'b0)
 	multiple <=   45'd0;
-else if (counter<6'd33)
+else if (counter<6'd34)
 	multiple <=    weight_in * {17'd0, reff};
 else
 	multiple <=    multiple;
@@ -298,9 +386,9 @@ always@(posedge clk or negedge rstn)
 begin
 if (rstn == 0)
 	dreg <=   32'd0;
-else if (adap_filter_state == 1'b1 && counter<6'd33)
+else if (adap_filter_state_dly == 1'b1 && counter<6'd34)
 	dreg <=   dreg + multiple[45:5];
-else if (adap_filter_state == 1'b0)
+else if (adap_filter_state_dly == 1'b0)
 	dreg <=   32'd0;
 else
 	dreg <=   dreg;
@@ -311,9 +399,9 @@ always@(posedge clk or negedge rstn)
 begin
 if (rstn == 0)
 	nref <=   32'd0;
-else if (adap_filter_state == 1'b0)
+else if (adap_filter_state_dly == 1'b0)
 	nref <=   32'd0;
-else if (counter<6'd33)
+else if (counter<6'd34)
 	nref <=  {17'd0, reff} * {17'd0, reff};
 else
 	nref <=   nref;
@@ -324,9 +412,9 @@ always@(posedge clk or negedge rstn)
 begin
 if (rstn == 0)
 	rreg <=   32'd0;
-else if (adap_filter_state == 1'b0)
+else if (adap_filter_state_dly == 1'b0)
 	rreg <=   32'd0;
-else if (adap_filter_state == 1'b1 && counter<6'd33)
+else if (adap_filter_state_dly == 1'b1 && counter<6'd34)
 	rreg <=   rreg + nref ;
 else
 	rreg <=   rreg;
@@ -337,7 +425,7 @@ always@(posedge clk or negedge rstn)
 begin
 if(rstn==0)
 	n <= 14'd0;	
-else if (counter == 6'd32&&flag_15==1&&flag_n==1)
+else if (counter == 6'd33&&flag_15==1&&flag_n==1)
 	n <=   rreg + nref;
 else
 	n <=  n;
@@ -347,7 +435,7 @@ always@(posedge clk or negedge rstn)
 begin
 if(rstn==0)
 	d_sum <= 14'd0;	
-else if (counter == 6'd32&&flag_15==1&&flag_n==1)
+else if (counter == 6'd33&&flag_15==1&&flag_n==1)
 	d_sum <=   dreg + multiple[45:5];
 else
 	d_sum <=  d_sum;
@@ -357,9 +445,9 @@ always@(posedge clk or negedge rstn)
 begin
 if (rstn == 0)
 	e <=   14'd0;
-else if (div_state == 1'b1 && adap_filter_state == 1'b1 && counter == 6'd33 && d[13] == 0)
+else if (div_state == 1'b1 && adap_filter_state_dly == 1'b1 && counter == 6'd34 && d[13] == 0)
 	e <=   reff_31 - d;	
-else if (div_state == 1'b1 && adap_filter_state == 1'b1 && counter == 6'd33 && d[13] == 1)
+else if (div_state == 1'b1 && adap_filter_state_dly == 1'b1 && counter == 6'd34 && d[13] == 1)
 	e <=   reff_31 + d;	
 else
 	e <=   e;
